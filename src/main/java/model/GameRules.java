@@ -6,9 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameRules {
+
     public GameRules() {}
-    public void startGame() {
-        Board board;
+
+    public static Board startGame() {
+        Board board = new Board();
+        return board;
+    }
+
+    public boolean putTheChip (Board board, BlackOrWhite chip) {
+        List<Pair<Integer, Integer>> stand = whereToStand(chip.getColor(), board);
+        Pair<Integer, Integer> checking = new Pair<Integer, Integer>(chip.getParamX(), chip.getParamY());
+        if (stand.isEmpty() || !stand.contains(checking)) return false;
+        board.putChip(chip);
+        return true;
     }
 
     public boolean changeColor (Board board, BlackOrWhite chip) {
@@ -21,6 +32,13 @@ public class GameRules {
             }
         }
         return true;
+    }
+
+    public void whereToStandPut (Board board, BlackOrWhite chip) {
+        List<Pair<Integer, Integer>> stand = whereToStand(chip.getColor(), board);
+        for (Pair<Integer, Integer> i: stand) {
+            board.putChip(i.getKey(), i.getValue(), Colors.CanPut);
+        }
     }
 
     public boolean isGameOver(Board board){
@@ -57,11 +75,11 @@ public class GameRules {
 
     public List<Pair<Integer, Integer>> whereToStand (Colors color, Board board) {
         ArrayList<Pair<Integer, Integer>> placesToStand = new ArrayList<Pair<Integer, Integer>>();
-        findePlaceableToPut(color,placesToStand, board);
+        findePlaceAbleToPut(color,placesToStand, board);
         return placesToStand;
     }
 
-    private void findePlaceableToPut (Colors color, ArrayList<Pair<Integer, Integer>> places, Board board ) {
+    public void findePlaceAbleToPut (Colors color, ArrayList<Pair<Integer, Integer>> places, Board board ) {
         for (int i = 0; i < 8; ++i) {
             for (int j= 0; i < 8; ++j) {
                 int SavedI = i;

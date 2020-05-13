@@ -1,6 +1,10 @@
 package model;
 
+import javafx.util.Pair;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Board {
     private int countWhite = 0;
@@ -23,6 +27,8 @@ public class Board {
                 grid[i][j] = a;
             }
         }
+        countWhite += 2;
+        countBlack += 2;
         grid[3][3] = Colors.White;
         grid[4][3] = Colors.Black;
         grid[3][4] = Colors.Black;
@@ -67,7 +73,7 @@ public class Board {
         if (isContained(x, y))
             if (value == Colors.Black) {
                 countBlack += 1;
-            } else countWhite += 1;
+            } else if (value == Colors.White) countWhite += 1;
         grid[x][y] = value;
     }
 
