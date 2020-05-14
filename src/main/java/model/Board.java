@@ -44,12 +44,12 @@ public class Board {
     }
 
     public boolean isContained (int x, int y) {
-        if ((x < 0 || x > width || y < 0 || y > height) && valueAt(x, y) == Colors.Empty) return false;
+        if ((x < 0 || x > width || y < 0 || y > height) && valueAt(x, y) != Colors.CanPut) return false;
         return true;
     }
 
     public Colors valueAt (int x, int y) {
-        if (isContained(x, y)) return grid[x][y];
+        if ((x > 0 && x <= width && y > 0 && y <= height)) return grid[x][y];
         return null;
     }
 
