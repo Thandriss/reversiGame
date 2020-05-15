@@ -18,8 +18,8 @@ import model.GameRules;
 public class MainContr {
 
     @FXML
-    private Button startGameButton;
- 
+    private Button startGameButton = new Button();
+
 
     public Button getStartGameButton() {
         return startGameButton;
