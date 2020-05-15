@@ -19,7 +19,7 @@ public class MainContr {
 
     @FXML
     private Button startGameButton;
-
+ 
 
     public Button getStartGameButton() {
         return startGameButton;
