@@ -1,16 +1,13 @@
 package model;
 
-import javafx.util.Pair;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Board {
     private int countWhite = 0;
     private int countBlack = 0;
     private Colors [][] grid = new Colors[8][8];
-    private int width, height;
+    private int width = 8;
+    private int height = 8;
 
     public int getCountBlack() {
         return countBlack;
@@ -20,9 +17,9 @@ public class Board {
         return countWhite;
     }
 
-    public void Board () {
-        for (int i = 0; i <= 7; i++) {
-            for (int j = 0; i <= 7; i++) {
+    public Board () {
+        for (int i = 0; i <= 7; ++i) {
+            for (int j = 0; j <= 7;++j) {
                 Colors a = Colors.Empty;
                 grid[i][j] = a;
             }
@@ -49,7 +46,7 @@ public class Board {
     }
 
     public Colors valueAt (int x, int y) {
-        if ((x > 0 && x <= width && y > 0 && y <= height)) return grid[x][y];
+        if ((x >= 0 && x < width && y >= 0 && y < height)) return grid[x][y];
         return null;
     }
 
