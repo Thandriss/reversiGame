@@ -3,18 +3,18 @@ package model;
 import java.util.Arrays;
 
 public class Board {
-    private int countWhite = 0;
-    private int countBlack = 0;
+    private Integer countWhite = 0;
+    private Integer countBlack = 0;
     private Colors [][] grid = new Colors[8][8];
     private int width = 8;
     private int height = 8;
 
-    public int getCountBlack() {
-        return countBlack;
+    public String getCountBlack() {
+        return countBlack.toString();
     }
 
-    public int getCountWhite() {
-        return countWhite;
+    public String getCountWhite() {
+        return countWhite.toString();
     }
 
     public Board () {
@@ -41,7 +41,7 @@ public class Board {
     }
 
     public boolean isContained (int x, int y) {
-        if ((x < 0 || x > width || y < 0 || y > height) && valueAt(x, y) != Colors.CanPut) return false;
+        if ((x < 0 || x > width || y < 0 || y > height) && valueAt(x, y) != Colors.Empty) return false;
         return true;
     }
 

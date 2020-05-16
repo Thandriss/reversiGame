@@ -14,7 +14,7 @@ public class GameRules {
         return board;
     }
 
-    public boolean putTheChip (Board board, BlackOrWhite chip) {
+    public static boolean putTheChip (Board board, BlackOrWhite chip) {
         List<Pair<Integer, Integer>> stand = whereToStand(chip.getColor(), board);
         Pair<Integer, Integer> checking = new Pair<Integer, Integer>(chip.getParamX(), chip.getParamY());
         if (stand.isEmpty() || !stand.contains(checking)) return false;
@@ -22,7 +22,7 @@ public class GameRules {
         return true;
     }
 
-    public boolean changeColor (Board board, BlackOrWhite chip) {
+    public static boolean changeColor (Board board, BlackOrWhite chip) {
         List<Pair<Integer, Integer>> shouldBeChanged = sсanerOfNearToChange(board, chip);
         for (Pair i: shouldBeChanged) {
             Integer x = (Integer) i.getKey();
@@ -34,18 +34,18 @@ public class GameRules {
         return true;
     }
 
-    public void whereToStandPut (Board board, BlackOrWhite chip) {
-        List<Pair<Integer, Integer>> stand = whereToStand(chip.getColor(), board);
+    public static void whereToStandPut(Board board, Colors color) {
+        List<Pair<Integer, Integer>> stand = whereToStand(color, board);
         for (Pair<Integer, Integer> i: stand) {
             board.putChip(i.getKey(), i.getValue(), Colors.CanPut);
         }
     }
 
-    public boolean isGameOver(Board board){
+    public static boolean isGameOver(Board board){
         return board.isGameOver();
     }
 
-    private List<Pair<Integer, Integer>> sсanerOfNearToChange (Board board, BlackOrWhite chip) {
+    private static List<Pair<Integer, Integer>> sсanerOfNearToChange (Board board, BlackOrWhite chip) {
         List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>();
         List<Pair<Integer, Integer>> answer = new ArrayList<Pair<Integer, Integer>>();
         BlackOrWhite saved = chip;
@@ -73,15 +73,15 @@ public class GameRules {
         return answer;
     }
 
-    public List<Pair<Integer, Integer>> whereToStand (Colors color, Board board) {
+    public static List<Pair<Integer, Integer>> whereToStand(Colors color, Board board) {
         ArrayList<Pair<Integer, Integer>> placesToStand = new ArrayList<Pair<Integer, Integer>>();
         findePlaceAbleToPut(color,placesToStand, board);
         return placesToStand;
     }
 
-    public void findePlaceAbleToPut (Colors color, ArrayList<Pair<Integer, Integer>> places, Board board ) {
+    public static void findePlaceAbleToPut(Colors color, ArrayList<Pair<Integer, Integer>> places, Board board) {
         for (int i = 0; i < 8; ++i) {
-            for (int j= 0; i < 8; ++j) {
+            for (int j= 0; j < 8; ++j) {
                 int SavedI = i;
                 int SavedJ = j;
                 if (board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty && board.valueAt(i, j) != Colors.CanPut) {
@@ -89,7 +89,10 @@ public class GameRules {
                         i = i + 1;
                         j = j + 1;
                         while (i < 7 && j < 7 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {i++; j++;}
+                                && board.valueAt(i, j) != Colors.CanPut) {
+                            i++;
+                            j++;
+                        }
                         if (i<=7 && j <=7 && board.valueAt(i, j) == color) {
                             places.add(new Pair<Integer, Integer>(SavedI - 1,SavedJ - 1));
                         }
@@ -163,6 +166,8 @@ public class GameRules {
                             places.add(new Pair<Integer, Integer>(SavedI + 1,SavedJ + 1));
                         }
                     }
+                    i = SavedI;
+                    j = SavedJ;
                 }
             }
         }
