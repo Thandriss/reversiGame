@@ -32,14 +32,6 @@ public class Board {
         grid[4][4] = Colors.White;
     }
 
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
     public boolean isContained (int x, int y) {
         if ((x < 0 || x > width || y < 0 || y > height) && valueAt(x, y) != Colors.Empty) return false;
         return true;
@@ -53,6 +45,7 @@ public class Board {
     public boolean isGameOver() {
         return countBlack + countWhite == 64;
     }
+
     public boolean isBlackWin() {
         return isGameOver() && countBlack > countWhite;
     }
@@ -82,7 +75,7 @@ public class Board {
             countWhite -= 1;
             countBlack += 1;
         } else {
-            countBlack += 1;
+            countBlack -= 1;
             countWhite += 1;
         }
     }
