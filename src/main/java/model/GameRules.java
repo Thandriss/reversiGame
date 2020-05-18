@@ -69,10 +69,13 @@ public class GameRules {
             while (chip.getParamY() >= 0 && chip.getParamX() >= 0 && chip.getParamX() <= 7 && chip.getParamY() <= 7 ) {
                 if (board.valueAt(chip.getParamX() + x, chip.getParamY() + y) != chip.getColor()
                         && board.valueAt(chip.getParamX() + x, chip.getParamY() + y) != Colors.Empty
-                && board.valueAt(chip.getParamX() + x, chip.getParamY() + y) != Colors.CanPut) {
+                && board.valueAt(chip.getParamX() + x, chip.getParamY() + y) != Colors.CanPut
+                        && chip.getParamY() + 2*y >= 0 && chip.getParamX() + 2*x >= 0 && chip.getParamX() + 2*x <= 7
+                        && chip.getParamY() + 2*y <= 7) {
                     Pair<Integer, Integer> b = new Pair<Integer, Integer>(chip.getParamX() + x, chip.getParamY() + y);
                     between.add(b);
-                } else if (board.valueAt(chip.getParamX() + x, chip.getParamY() + y) == chip.getColor()) {
+                } else if (board.valueAt(chip.getParamX() + x, chip.getParamY() + y) == chip.getColor()
+                        && chip.getParamY() + y >= 0 && chip.getParamX() + x >= 0 && chip.getParamX() + x <= 7 && chip.getParamY() + y <= 7) {
                     answer.addAll(between);
                     between.clear();
                     break;
@@ -94,8 +97,8 @@ public class GameRules {
     }
 
     public static void findePlaceAbleToPut(Colors color, ArrayList<Pair<Integer, Integer>> places, Board board) {
-        for (int i = 0; i < 8; i++) {
-            for (int j= 0; j < 8; j++) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j= 0; j < 8; ++j) {
                 int SavedI = i;
                 int SavedJ = j;
                 if (board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty && board.valueAt(i, j) != Colors.CanPut) {
