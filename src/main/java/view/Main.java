@@ -2,7 +2,6 @@ package view;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -15,7 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import model.BlackOrWhite;
 import model.Board;
 import model.Colors;
 import model.GameRules;
@@ -23,49 +21,45 @@ import java.io.InputStream;
 import java.util.List;
 
 public class Main extends Application {
-    private Stage mainWindow;
-    private Scene sceneOfGame;
     private Board board1;
     private final  Text White = new Text(800, 200, "White: ");
     private final  Text Black = new Text(800, 600, "Black: ");
     private final Text scoreBlack = new Text(900, 600, "");
-    private final Text scoreWhte = new Text(900, 200, "");
+    private final Text scoreWhite = new Text(900, 200, "");
     private final Text turn = new Text(800, 400, "Turn: ");
     private final Text currentPlayer = new Text(900, 400, "");
     private final Text winner = new Text(800, 500, "");
     private int i = 0;
-    private Group rootWind;
     private GridPane viewOfBoard = new GridPane();
     private Canvas[][] SaveCanvas = new Canvas[8][8];
-    Colors color = Colors.Black;
+    private Colors color = Colors.Black;
     private List<Pair<Integer, Integer>> canBePut;
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        mainWindow = primaryStage;
         InputStream iconStream = getClass().getResourceAsStream("/img/icon.png");
         Image image = new Image(iconStream);
-        mainWindow.getIcons().add(image);
+        primaryStage.getIcons().add(image);
         board1 = GameRules.startGame();
         White.setFont(Font.font(30.0));
         Black.setFont(Font.font(30.0));
         turn.setFont(Font.font(30.0));
-        scoreWhte.setFont(Font.font(30.0));
+        scoreWhite.setFont(Font.font(30.0));
         scoreBlack.setFont(Font.font(30.0));
         currentPlayer.setFont(Font.font(30.0));
         winner.setFont(Font.font(30.0));
-        rootWind = new Group(White, Black, scoreBlack, scoreWhte, turn, currentPlayer, viewOfBoard, winner);
+        Group rootWind = new Group(White, Black, scoreBlack, scoreWhite, turn, currentPlayer, viewOfBoard, winner);
         fullCanvasForView();
         canBePut = GameRules.whereToStand(color, board1);
         GameRules.whereToStandPut(board1, canBePut);
         drawBoard();
-        sceneOfGame = new Scene(rootWind, 1000, 788);
+        Scene sceneOfGame = new Scene(rootWind, 1000, 788);
         sceneOfGame.setOnMouseClicked(mouseHandler);
-        mainWindow.setResizable(false);
-        mainWindow.setTitle("Reversi");
-        mainWindow.setScene(sceneOfGame);
-        mainWindow.show();
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("Reversi");
+        primaryStage.setScene(sceneOfGame);
+        primaryStage.show();
     }
 
     public static void main(String[] args) { launch(args); }
@@ -107,38 +101,52 @@ public class Main extends Application {
         }
         currentPlayer.setText(color.toString());
         scoreBlack.setText(board1.getCountBlack());
-        scoreWhte.setText(board1.getCountWhite());
+        scoreWhite.setText(board1.getCountWhite());
     }
 
     private EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
 
         @Override
         public void handle(MouseEvent event) {
-            int x = (int) event.getX();
-            int y = (int)  event.getY();
+            int x = (int) event.getX() / 100;
+            int y = (int) event.getY() / 100;
             checking();
-            BlackOrWhite chip = new BlackOrWhite(x / 100, y / 100, color);
-            GameRules.putTheChip(board1, chip, canBePut);
-            GameRules.changeColor(board1, chip);
-            GameRules.deletCanPut(board1, canBePut);
-            if (board1.isGameOver()) {
-                if (board1.isBlackWin()) {
-                    winner.setText("Winner is Black");
-                } else if (board1.isWhiteWin()) {
-                    winner.setText("Winner is Black");
-                } else {
-                    winner.setText("We are the champions");
+            if (!canBePut.isEmpty()) {
+                if (GameRules.putTheChip(board1, x, y, color, canBePut)) {
+                    GameRules.changeColor(board1, x, y, color);
+                    GameRules.deleteCanPut(board1, canBePut);
+                    if (board1.isGameOver()) {
+                        if (board1.isBlackWin()) {
+                            winner.setText("Winner is Black");
+                        } else if (board1.isWhiteWin()) {
+                            winner.setText("Winner is White");
+                        } else {
+                            winner.setText("We are the champions");
+                        }
+                    }
+                    drawBoard();
+                    canBePut.clear();
+                    i += 1;
+                    checking();
+                    canBePut = GameRules.whereToStand(color, board1);
+                    if (canBePut.isEmpty()) {
+                        i += 1;
+                        checking();
+                        canBePut = GameRules.whereToStand(color, board1);
+                    }
+                    GameRules.whereToStandPut(board1, canBePut);
+                    drawBoard();
                 }
+            } else {
+                i += 1;
+                checking();
+                canBePut = GameRules.whereToStand(color, board1);
+                GameRules.whereToStandPut(board1, canBePut);
+                drawBoard();
             }
-            drawBoard();
-            canBePut.clear();
-            i += 1;
-            checking();
-            canBePut = GameRules.whereToStand(color, board1);
-            GameRules.whereToStandPut(board1, canBePut);
-            drawBoard();
         }
     };
+
     private void checking () {
         if (i % 2 == 0) {
             color = Colors.Black;

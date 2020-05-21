@@ -55,9 +55,6 @@ public class Board {
     }
 
 
-    public boolean isContained (BlackOrWhite chip) {
-        return isContained(chip.getParamX(), chip.getParamY());
-    }
 
     public void putChip (Integer x, Integer y, Colors value) {
         if (isContained(x, y))
@@ -78,9 +75,6 @@ public class Board {
             countBlack -= 1;
             countWhite += 1;
         }
-    }
-    public void putChip (BlackOrWhite chip) {
-        putChip(chip.getParamX(), chip.getParamY(), chip.getColor());
     }
 
 
