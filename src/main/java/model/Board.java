@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Arrays;
+
 
 public class Board {
     private Integer countWhite = 0;
@@ -9,12 +9,12 @@ public class Board {
     private int width = 8;
     private int height = 8;
 
-    public String getCountBlack() {
-        return countBlack.toString();
+    public Integer getCountBlack() {
+        return countBlack;
     }
 
-    public String getCountWhite() {
-        return countWhite.toString();
+    public Integer getCountWhite() {
+        return countWhite;
     }
 
     public Board () {
@@ -42,19 +42,6 @@ public class Board {
         return null;
     }
 
-    public boolean isGameOver() {
-        return countBlack + countWhite == 64;
-    }
-
-    public boolean isBlackWin() {
-        return isGameOver() && countBlack > countWhite;
-    }
-
-    public boolean isWhiteWin() {
-        return isGameOver() && countBlack < countWhite;
-    }
-
-
 
     public void putChip (Integer x, Integer y, Colors value) {
         if (isContained(x, y))
@@ -77,13 +64,4 @@ public class Board {
         }
     }
 
-
-    @Override
-    public String toString() {
-        return "Board{" +
-                "grid=" + Arrays.toString(grid) +
-                ", width=" + width +
-                ", height=" + height +
-                '}';
-    }
 }

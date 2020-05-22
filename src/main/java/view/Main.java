@@ -2,10 +2,13 @@ package view;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -17,6 +20,8 @@ import javafx.util.Pair;
 import model.Board;
 import model.Colors;
 import model.GameRules;
+
+
 import java.io.InputStream;
 import java.util.List;
 
@@ -100,8 +105,8 @@ public class Main extends Application {
             }
         }
         currentPlayer.setText(color.toString());
-        scoreBlack.setText(board1.getCountBlack());
-        scoreWhite.setText(board1.getCountWhite());
+        scoreBlack.setText(board1.getCountBlack().toString());
+        scoreWhite.setText(board1.getCountWhite().toString());
     }
 
     private EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
@@ -115,10 +120,10 @@ public class Main extends Application {
                 if (GameRules.putTheChip(board1, x, y, color, canBePut)) {
                     GameRules.changeColor(board1, x, y, color);
                     GameRules.deleteCanPut(board1, canBePut);
-                    if (board1.isGameOver()) {
-                        if (board1.isBlackWin()) {
+                    if (board1.getCountBlack() + board1.getCountWhite() == 64) {
+                        if (board1.getCountBlack() > board1.getCountWhite()) {
                             winner.setText("Winner is Black");
-                        } else if (board1.isWhiteWin()) {
+                        } else if (board1.getCountWhite() > board1.getCountBlack()) {
                             winner.setText("Winner is White");
                         } else {
                             winner.setText("We are the champions");

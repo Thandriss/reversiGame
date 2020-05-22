@@ -14,6 +14,7 @@ public class GameRules {
     }
 
     public static boolean putTheChip (Board board, Integer x, Integer y, Colors color, List<Pair<Integer, Integer>> canBePut) {
+        if (x < 0 || y < 0 || x > 7 || y > 7) throw new IllegalArgumentException();
         Pair<Integer, Integer> checking = new Pair<Integer, Integer>(x, y);
         if (canBePut.isEmpty() || !canBePut.contains(checking)) return false;
         board.putChip(x, y, color);
