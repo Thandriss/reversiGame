@@ -22,8 +22,8 @@ import java.util.List;
 
 public class Main extends Application {
     private Board board1;
-    private final  Text White = new Text(800, 200, "White: ");
-    private final  Text Black = new Text(800, 600, "Black: ");
+    private final  Text white = new Text(800, 200, "White: ");
+    private final  Text black = new Text(800, 600, "Black: ");
     private final Text scoreBlack = new Text(900, 600, "");
     private final Text scoreWhite = new Text(900, 200, "");
     private final Text turn = new Text(800, 400, "Turn: ");
@@ -31,7 +31,7 @@ public class Main extends Application {
     private final Text winner = new Text(800, 500, "");
     private int i = 0;
     private GridPane viewOfBoard = new GridPane();
-    private Canvas[][] SaveCanvas = new Canvas[8][8];
+    private Canvas[][] saveCanvas = new Canvas[8][8];
     private Colors color = Colors.Black;
     private List<Pair<Integer, Integer>> canBePut;
 
@@ -42,14 +42,14 @@ public class Main extends Application {
         Image image = new Image(iconStream);
         primaryStage.getIcons().add(image);
         board1 = GameRules.startGame();
-        White.setFont(Font.font(30.0));
-        Black.setFont(Font.font(30.0));
+        white.setFont(Font.font(30.0));
+        black.setFont(Font.font(30.0));
         turn.setFont(Font.font(30.0));
         scoreWhite.setFont(Font.font(30.0));
         scoreBlack.setFont(Font.font(30.0));
         currentPlayer.setFont(Font.font(30.0));
         winner.setFont(Font.font(30.0));
-        Group rootWind = new Group(White, Black, scoreBlack, scoreWhite, turn, currentPlayer, viewOfBoard, winner);
+        Group rootWind = new Group(white, black, scoreBlack, scoreWhite, turn, currentPlayer, viewOfBoard, winner);
         fullCanvasForView();
         canBePut = GameRules.whereToStand(color, board1);
         GameRules.whereToStandPut(board1, canBePut);
@@ -67,8 +67,8 @@ public class Main extends Application {
     private void fullCanvasForView() {
         for (int i = 0; i <=7; i++){
             for (int j = 0; j <=7; j++) {
-                SaveCanvas[i][j] = new Canvas(100, 100);
-                viewOfBoard.add(SaveCanvas[i][j], i, j);
+                saveCanvas[i][j] = new Canvas(100, 100);
+                viewOfBoard.add(saveCanvas[i][j], i, j);
             }
         }
     }
@@ -79,7 +79,7 @@ public class Main extends Application {
         checking();
         for (int i = 0; i<=7; i++) {
             for(int j = 0; j<=7; j++) {
-                GraphicsContext first = SaveCanvas[i][j].getGraphicsContext2D();
+                GraphicsContext first = saveCanvas[i][j].getGraphicsContext2D();
                 first.setStroke(Color.BLACK);
                 first.setLineWidth(3);
                 first.strokeRect(x, y, 100, 100);

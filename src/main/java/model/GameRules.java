@@ -98,111 +98,37 @@ public class GameRules {
     }
 
     private static void findPlaceAbleToPut(Colors color, ArrayList<Pair<Integer, Integer>> places, Board board) {
+        List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>();
+        sidesOfLook.add(new Pair<Integer, Integer>(0, 1));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, 0));
+        sidesOfLook.add(new Pair<Integer, Integer>(0, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, 0));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, 1));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, 1));
         for (int i = 0; i < 8; ++i) {
             for (int j= 0; j < 8; ++j) {
-                int SavedI = i;
-                int SavedJ = j;
-                if (board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty && board.valueAt(i, j) != Colors.CanPut) {
-                    if (i - 1 >= 0 && j - 1 >= 0 && board.valueAt(i-1, j-1) == Colors.Empty) {
-                        i = i + 1;
-                        j = j + 1;
-                        while (i < 7 && j < 7 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            i++;
-                            j++;
-                        }
-                        if (i<=7 && j <=7 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI - 1,SavedJ - 1));
-                        }
-                    }
-                    i = SavedI;
-                    j = SavedJ;
-                    if (i - 1>= 0 && board.valueAt(i-1, j) == Colors.Empty) {
-                        i = i + 1;
-                        while (i < 7 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            i++;
-                        }
-                        if (i <= 7 && board.valueAt(i, j) == color ) {
-                            places.add(new Pair<Integer, Integer>(SavedI - 1, SavedJ));
+                int savedI = i;
+                int savedJ = j;
+                for (Pair<Integer, Integer> navi: sidesOfLook) {
+                    if (board.valueAt(i, j) != color && board.valueAt(i, j) != Colors.Empty && board.valueAt(i, j) != Colors.CanPut) {
+                        if (i - navi.getKey() >= 0 && j - navi.getValue() >= 0 && i - navi.getKey() <= 7 && j - navi.getValue() <= 7
+                                && board.valueAt(i - navi.getKey(), j - navi.getValue()) == Colors.Empty) {
+                            i = i + navi.getKey();
+                            j = j + navi.getValue();
+                            while (i < 7 && j < 7 && i > 0 && j > 0 && board.valueAt(i, j) != color && board.valueAt(i, j) != Colors.Empty
+                                    && board.valueAt(i, j) != Colors.CanPut) {
+                                i += navi.getKey();
+                                j += navi.getValue();
+                            }
+                            if (i <= 7 && j <= 7 && board.valueAt(i, j) == color) {
+                                places.add(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()));
+                            }
                         }
                     }
-                    i = SavedI;
-                    if (i - 1 >=0 && j + 1 >= 0 && board.valueAt(i-1, j+1) == Colors.Empty) {
-                        i = i + 1;
-                        j = j - 1;
-                        while (i < 7 && j > 0 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            i++;
-                            j--;
-                        }
-                        if (i<=7 && j >= 0 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI - 1,SavedJ + 1));
-                        }
-                    }
-                    i = SavedI;
-                    j = SavedJ;
-                    if (j - 1 >= 0 && board.valueAt(i, j-1) == Colors.Empty) {
-                        j = j + 1;
-                        while (j < 7 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            j++;
-                        }
-                        if (j <=7 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI,SavedJ - 1));
-                        }
-                    }
-                    j = SavedJ;
-                    if (j + 1 >= 0 && board.valueAt(i, j+1) == Colors.Empty) {
-                        j = j - 1;
-                        while (j > 0 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            j--;
-                        }
-                        if (i >= 0  && j <=7 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI,SavedJ + 1));
-                        }
-                    }
-                    j = SavedJ;
-                    if (i + 1 <= 7 && j - 1 >= 0 && board.valueAt(i+1, j-1) == Colors.Empty) {
-                        i = i - 1;
-                        j = j + 1;
-                        while (i > 0 && j < 7 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            i--;
-                            j++;
-                        }
-                        if (i >= 0 && j <=7 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI + 1,SavedJ - 1));
-                        }
-                    }
-                    i = SavedI;
-                    j = SavedJ;
-                    if (i + 1 <= 7 && board.valueAt(i+1, j) == Colors.Empty) {
-                        i = i - 1;
-                        while (i > 0 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            i--;
-                        }
-                        if (i >= 0 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI + 1,SavedJ));
-                        }
-                    }
-                    i = SavedI;
-                    if (i + 1 <= 7 && j + 1 <= 7 && board.valueAt(i+1, j+1) == Colors.Empty) {
-                        i = i - 1;
-                        j = j - 1;
-                        while (i > 0 && j > 0 && board.valueAt(i, j)!= color && board.valueAt(i, j) != Colors.Empty
-                                && board.valueAt(i, j) != Colors.CanPut) {
-                            i--;
-                            j--;
-                        }
-                        if (i >= 0 && j >=0 && board.valueAt(i, j) == color) {
-                            places.add(new Pair<Integer, Integer>(SavedI + 1,SavedJ + 1));
-                        }
-                    }
-                    i = SavedI;
-                    j = SavedJ;
+                    i = savedI;
+                    j = savedJ;
                 }
             }
         }
