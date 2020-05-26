@@ -32,8 +32,8 @@ public class Board {
         grid[4][4] = Colors.White;
     }
 
-    public boolean isContained (int x, int y) {
-        if ((x < 0 || x > width || y < 0 || y > height) && valueAt(x, y) != Colors.Empty) return false;
+    public boolean canWePut (int x, int y) {
+        if ((x < 0 || x > width || y < 0 || y > height) && (valueAt(x, y) != Colors.Empty || valueAt(x, y) != Colors.CanPut)) return false;
         return true;
     }
 
@@ -44,7 +44,7 @@ public class Board {
 
 
     public void putChip (Integer x, Integer y, Colors value) {
-        if (isContained(x, y))
+        if (canWePut(x, y))
             if (value == Colors.Black) {
                 countBlack += 1;
             } else if (value == Colors.White) countWhite += 1;

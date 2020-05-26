@@ -118,12 +118,12 @@ public class GameRules {
                                 && board.valueAt(i - navi.getKey(), j - navi.getValue()) == Colors.Empty) {
                             i = i + navi.getKey();
                             j = j + navi.getValue();
-                            while (i < 7 && j < 7 && i > 0 && j > 0 && board.valueAt(i, j) != color && board.valueAt(i, j) != Colors.Empty
+                            while (i <= 7 && j <= 7 && i >= 0 && j >= 0 && board.valueAt(i, j) != color && board.valueAt(i, j) != Colors.Empty
                                     && board.valueAt(i, j) != Colors.CanPut) {
                                 i += navi.getKey();
                                 j += navi.getValue();
                             }
-                            if (i <= 7 && j <= 7 && board.valueAt(i, j) == color) {
+                            if (i >= 0 && j >= 0 && i <= 7 && j <= 7 && board.valueAt(i, j) == color) {
                                 places.add(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()));
                             }
                         }
