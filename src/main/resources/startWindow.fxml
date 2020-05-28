@@ -15,7 +15,7 @@
             <Font size="83.0" />
           </font>
         </Label>
-            <Button fx:id="startGame" layoutX="472.0" layoutY="504.0" mnemonicParsing="false" text="Start Game">
+            <Button fx:id="startGame" onAction="#buttonToDo" layoutX="472.0" layoutY="504.0" mnemonicParsing="false" text="Start Game">
                <font>
                   <Font size="54.0" />
                </font>
