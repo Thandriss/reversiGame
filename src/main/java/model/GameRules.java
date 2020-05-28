@@ -123,7 +123,8 @@ public class GameRules {
                                 i += navi.getKey();
                                 j += navi.getValue();
                             }
-                            if (i >= 0 && j >= 0 && i <= 7 && j <= 7 && board.valueAt(i, j) == color) {
+                            if (i >= 0 && j >= 0 && i <= 7 && j <= 7 && board.valueAt(i, j) == color &&
+                                    !places.contains(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()))) {
                                 places.add(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()));
                             }
                         }
