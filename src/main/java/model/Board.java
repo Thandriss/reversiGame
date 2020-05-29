@@ -17,7 +17,7 @@ public class Board {
         return countWhite;
     }
 
-    public Board () {
+    public Board() {
         for (int i = 0; i <= 7; ++i) {
             for (int j = 0; j <= 7;++j) {
                 Colors a = Colors.Empty;
@@ -33,8 +33,7 @@ public class Board {
     }
 
     public boolean canWePut (int x, int y) {
-        if ((x < 0 || x > width || y < 0 || y > height) && (valueAt(x, y) != Colors.Empty || valueAt(x, y) != Colors.CanPut)) return false;
-        return true;
+        return (x >= 0 && x <= width && y >= 0 && y <= height) || (valueAt(x, y) == Colors.Empty && valueAt(x, y) == Colors.CanPut);
     }
 
     public Colors valueAt (int x, int y) {
