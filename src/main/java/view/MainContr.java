@@ -3,7 +3,6 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -18,7 +17,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import model.Board;
 import model.Colors;
-import model.GameRules;
 
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class MainContr {
     }
 
     public void buttonToDo (ActionEvent event) {
-        board1 = GameRules.startGame();
+        board1 = new Board();
         white.setFont(Font.font(30.0));
         black.setFont(Font.font(30.0));
         turn.setFont(Font.font(30.0));
@@ -57,8 +55,8 @@ public class MainContr {
         winner.setFont(Font.font(30.0));
         Group rootWind = new Group(white, black, scoreBlack, scoreWhite, turn, currentPlayer, viewOfBoard, winner);
         fullCanvasForView();
-        canBePut = GameRules.whereToStand(color, board1);
-        GameRules.whereToStandPut(board1, canBePut);
+        canBePut = board1.whereToStand(color);
+        board1.whereToStandPut(canBePut);
         drawBoard();
         Scene sceneOfGame = new Scene(rootWind, 1100, 788);
         sceneOfGame.setOnMouseClicked(mouseHandler);
@@ -112,9 +110,9 @@ public class MainContr {
             int y = (int) event.getY() / 100;
             checking();
             if (!canBePut.isEmpty()) {
-                if (GameRules.putTheChip(board1, x, y, color, canBePut)) {
-                    GameRules.changeColor(board1, x, y, color);
-                    GameRules.deleteCanPut(board1, canBePut);
+                if (board1.putTheChip(x, y, color, canBePut)) {
+                    board1.changeColor(x, y, color);
+                    board1.deleteCanPut(canBePut);
                     if (board1.getCountBlack() + board1.getCountWhite() == 64) {
                         if (board1.getCountBlack() > board1.getCountWhite()) {
                             winner.setText("Winner is Black");
@@ -128,20 +126,20 @@ public class MainContr {
                     canBePut.clear();
                     i += 1;
                     checking();
-                    canBePut = GameRules.whereToStand(color, board1);
+                    canBePut = board1.whereToStand(color);
                     if (canBePut.isEmpty()) {
                         i += 1;
                         checking();
-                        canBePut = GameRules.whereToStand(color, board1);
+                        canBePut = board1.whereToStand(color);
                     }
-                    GameRules.whereToStandPut(board1, canBePut);
+                    board1.whereToStandPut(canBePut);
                     drawBoard();
                 }
             } else {
                 i += 1;
                 checking();
-                canBePut = GameRules.whereToStand(color, board1);
-                GameRules.whereToStandPut(board1, canBePut);
+                canBePut = board1.whereToStand(color);
+                board1.whereToStandPut(canBePut);
                 drawBoard();
             }
         }

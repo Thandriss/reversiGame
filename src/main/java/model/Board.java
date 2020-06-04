@@ -1,6 +1,10 @@
 package model;
 
 
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
     private Integer countWhite = 0;
@@ -62,5 +66,126 @@ public class Board {
             countWhite += 1;
         }
     }
+    public boolean putTheChip (Integer x, Integer y, Colors color, List<Pair<Integer, Integer>> canBePut) {
+        if (x < 0 || y < 0 || x > 7 || y > 7) throw new IllegalArgumentException();
+        Pair<Integer, Integer> checking = new Pair<Integer, Integer>(x, y);
+        if (canBePut.isEmpty() || !canBePut.contains(checking)) return false;
+        putChip(x, y, color);
+        return true;
+    }
 
+    public void changeColor (Integer x, Integer y, Colors color) {
+        List<Pair<Integer, Integer>> shouldBeChanged = sсannerOfNearToChange(x, y, color);
+        for (Pair i: shouldBeChanged) {
+            Integer newX = (Integer) i.getKey();
+            Integer newY = (Integer) i.getValue();
+            if (valueAt(newX, newY) == Colors.Black || valueAt(newX, newY) == Colors.White) {
+                change(newX, newY, color);
+            }
+        }
+    }
+
+    public  void whereToStandPut( List<Pair<Integer, Integer>> canBePut) {
+        for (Pair<Integer, Integer> i: canBePut) {
+            putChip(i.getKey(), i.getValue(), Colors.CanPut);
+        }
+    }
+
+    public void deleteCanPut(List<Pair<Integer, Integer>> canBePut) {
+        for (Pair<Integer, Integer> i: canBePut) {
+            if (valueAt(i.getKey(), i.getValue()) == Colors.CanPut) {
+                putChip(i.getKey(), i.getValue(), Colors.Empty);
+            }
+        }
+    }
+
+    private  List<Pair<Integer, Integer>> sсannerOfNearToChange (Integer x, Integer y, Colors color) {
+        List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>();
+        List<Pair<Integer, Integer>> answer = new ArrayList<Pair<Integer, Integer>>();
+        List<Pair<Integer, Integer>> between = new ArrayList<Pair<Integer, Integer>>();
+        Integer savedX = x;
+        Integer savedY = y;
+        Colors saved = color;
+        sidesOfLook.add(new Pair<Integer, Integer>(0, 1));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, 0));
+        sidesOfLook.add(new Pair<Integer, Integer>(0, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, 0));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, 1));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, 1));
+        for (Pair i : sidesOfLook) {
+            Integer naviX = (Integer) i.getKey();
+            Integer naviY = (Integer) i.getValue();
+            while (y >= 0 && x >= 0 && x <= 7 && y <= 7 ) {
+                if (valueAt(x + naviX, y + naviY) != color
+                        && valueAt(x + naviX, y + naviY) != Colors.Empty
+                        && valueAt(x + naviX, y + naviY) != Colors.CanPut
+                        && y + 2*naviY >= 0 && x + 2*naviX >= 0 && x + 2*naviX <= 7
+                        && y + 2*naviY <= 7) {
+                    Pair<Integer, Integer> b = new Pair<Integer, Integer>(x + naviX, y + naviY);
+                    between.add(b);
+                } else if (valueAt(x + naviX, y + naviY) == color
+                        && y + naviY >= 0 && x + naviX >= 0 && x + naviX <= 7 && y + naviY <= 7) {
+                    answer.addAll(between);
+                    between.clear();
+                    break;
+                } else {
+                    between.clear();
+                    break;
+                }
+                x = x + naviX;
+                y = y + naviY;
+                saved = color;
+            }
+            x = savedX;
+            y = savedY;
+            color = saved;
+        }
+        return answer;
+    }
+
+    public List<Pair<Integer, Integer>> whereToStand(Colors color) {
+        ArrayList<Pair<Integer, Integer>> placesToStand = new ArrayList<Pair<Integer, Integer>>();
+        findPlaceAbleToPut(color,placesToStand);
+        return placesToStand;
+    }
+
+    private void findPlaceAbleToPut(Colors color, ArrayList<Pair<Integer, Integer>> places) {
+        List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>();
+        sidesOfLook.add(new Pair<Integer, Integer>(0, 1));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, 0));
+        sidesOfLook.add(new Pair<Integer, Integer>(0, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, 0));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, 1));
+        sidesOfLook.add(new Pair<Integer, Integer>(1, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, -1));
+        sidesOfLook.add(new Pair<Integer, Integer>(-1, 1));
+        for (int i = 0; i < 8; ++i) {
+            for (int j= 0; j < 8; ++j) {
+                int savedI = i;
+                int savedJ = j;
+                for (Pair<Integer, Integer> navi: sidesOfLook) {
+                    if (valueAt(i, j) != color && valueAt(i, j) != Colors.Empty && valueAt(i, j) != Colors.CanPut) {
+                        if (i - navi.getKey() >= 0 && j - navi.getValue() >= 0 && i - navi.getKey() <= 7 && j - navi.getValue() <= 7
+                                && valueAt(i - navi.getKey(), j - navi.getValue()) == Colors.Empty) {
+                            i = i + navi.getKey();
+                            j = j + navi.getValue();
+                            while (i <= 7 && j <= 7 && i >= 0 && j >= 0 && valueAt(i, j) != color && valueAt(i, j) != Colors.Empty
+                                    && valueAt(i, j) != Colors.CanPut) {
+                                i += navi.getKey();
+                                j += navi.getValue();
+                            }
+                            if (i >= 0 && j >= 0 && i <= 7 && j <= 7 && valueAt(i, j) == color &&
+                                    !places.contains(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()))) {
+                                places.add(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()));
+                            }
+                        }
+                    }
+                    i = savedI;
+                    j = savedJ;
+                }
+            }
+        }
+    }
 }
