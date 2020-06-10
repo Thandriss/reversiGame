@@ -10,8 +10,18 @@ public class Board {
     private Integer countWhite = 0;
     private Integer countBlack = 0;
     private Colors [][] grid = new Colors[8][8];
-    private int width = 8;
-    private int height = 8;
+    private List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>() {
+        {
+            add(new Pair<Integer, Integer>(0, 1));
+            add(new Pair<Integer, Integer>(1, 0));
+            add(new Pair<Integer, Integer>(0, -1));
+            add(new Pair<Integer, Integer>(-1, 0));
+            add(new Pair<Integer, Integer>(1, 1));
+            add(new Pair<Integer, Integer>(1, -1));
+            add(new Pair<Integer, Integer>(-1, -1));
+            add(new Pair<Integer, Integer>(-1, 1));
+        }
+    };
 
     public Integer getCountBlack() {
         return countBlack;
@@ -36,17 +46,23 @@ public class Board {
         grid[4][4] = Colors.White;
     }
 
-    public boolean canWePut (int x, int y) {
-        return (x >= 0 && x <= width && y >= 0 && y <= height) || (valueAt(x, y) == Colors.Empty && valueAt(x, y) == Colors.CanPut);
+    private boolean notOutOfRange (int x, int y) {
+        int width = 8;
+        int height = 8;
+        return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    private boolean canWePut (int x, int y) {
+        return (notOutOfRange(x, y)) || (valueAt(x, y) == Colors.Empty && valueAt(x, y) == Colors.CanPut);
     }
 
     public Colors valueAt (int x, int y) {
-        if ((x >= 0 && x < width && y >= 0 && y < height)) return grid[x][y];
+        if (notOutOfRange(x, y)) return grid[x][y];
         return null;
     }
 
 
-    public void putChip (Integer x, Integer y, Colors value) {
+    private void putChip (Integer x, Integer y, Colors value) {
         if (canWePut(x, y))
             if (value == Colors.Black) {
                 countBlack += 1;
@@ -54,7 +70,7 @@ public class Board {
         grid[x][y] = value;
     }
 
-    public void change (int x, int y, Colors color) {
+    private void change (int x, int y, Colors color) {
         if(valueAt(x, y) != color) {
             grid[x][y] = color;
         }
@@ -67,7 +83,7 @@ public class Board {
         }
     }
     public boolean putTheChip (Integer x, Integer y, Colors color, List<Pair<Integer, Integer>> canBePut) {
-        if (x < 0 || y < 0 || x > 7 || y > 7) throw new IllegalArgumentException();
+        if (!notOutOfRange(x, y)) throw new IllegalArgumentException();
         Pair<Integer, Integer> checking = new Pair<Integer, Integer>(x, y);
         if (canBePut.isEmpty() || !canBePut.contains(checking)) return false;
         putChip(x, y, color);
@@ -100,33 +116,23 @@ public class Board {
     }
 
     private  List<Pair<Integer, Integer>> sсannerOfNearToChange (Integer x, Integer y, Colors color) {
-        List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>();
         List<Pair<Integer, Integer>> answer = new ArrayList<Pair<Integer, Integer>>();
         List<Pair<Integer, Integer>> between = new ArrayList<Pair<Integer, Integer>>();
         Integer savedX = x;
         Integer savedY = y;
         Colors saved = color;
-        sidesOfLook.add(new Pair<Integer, Integer>(0, 1));
-        sidesOfLook.add(new Pair<Integer, Integer>(1, 0));
-        sidesOfLook.add(new Pair<Integer, Integer>(0, -1));
-        sidesOfLook.add(new Pair<Integer, Integer>(-1, 0));
-        sidesOfLook.add(new Pair<Integer, Integer>(1, 1));
-        sidesOfLook.add(new Pair<Integer, Integer>(1, -1));
-        sidesOfLook.add(new Pair<Integer, Integer>(-1, -1));
-        sidesOfLook.add(new Pair<Integer, Integer>(-1, 1));
         for (Pair i : sidesOfLook) {
             Integer naviX = (Integer) i.getKey();
             Integer naviY = (Integer) i.getValue();
-            while (y >= 0 && x >= 0 && x <= 7 && y <= 7 ) {
+            while (notOutOfRange(x, y)) {
                 if (valueAt(x + naviX, y + naviY) != color
                         && valueAt(x + naviX, y + naviY) != Colors.Empty
                         && valueAt(x + naviX, y + naviY) != Colors.CanPut
-                        && y + 2*naviY >= 0 && x + 2*naviX >= 0 && x + 2*naviX <= 7
-                        && y + 2*naviY <= 7) {
+                        && notOutOfRange(x + 2 * naviX, y + 2 * naviY)) {
                     Pair<Integer, Integer> b = new Pair<Integer, Integer>(x + naviX, y + naviY);
                     between.add(b);
                 } else if (valueAt(x + naviX, y + naviY) == color
-                        && y + naviY >= 0 && x + naviX >= 0 && x + naviX <= 7 && y + naviY <= 7) {
+                        && notOutOfRange(x + naviX, y + naviY)) {
                     answer.addAll(between);
                     between.clear();
                     break;
@@ -152,15 +158,6 @@ public class Board {
     }
 
     private void findPlaceAbleToPut(Colors color, ArrayList<Pair<Integer, Integer>> places) {
-        List<Pair<Integer, Integer>> sidesOfLook = new ArrayList<Pair<Integer, Integer>>();
-        sidesOfLook.add(new Pair<Integer, Integer>(0, 1));
-        sidesOfLook.add(new Pair<Integer, Integer>(1, 0));
-        sidesOfLook.add(new Pair<Integer, Integer>(0, -1));
-        sidesOfLook.add(new Pair<Integer, Integer>(-1, 0));
-        sidesOfLook.add(new Pair<Integer, Integer>(1, 1));
-        sidesOfLook.add(new Pair<Integer, Integer>(1, -1));
-        sidesOfLook.add(new Pair<Integer, Integer>(-1, -1));
-        sidesOfLook.add(new Pair<Integer, Integer>(-1, 1));
         for (int i = 0; i < 8; ++i) {
             for (int j= 0; j < 8; ++j) {
                 int savedI = i;
@@ -171,12 +168,12 @@ public class Board {
                                 && valueAt(i - navi.getKey(), j - navi.getValue()) == Colors.Empty) {
                             i = i + navi.getKey();
                             j = j + navi.getValue();
-                            while (i <= 7 && j <= 7 && i >= 0 && j >= 0 && valueAt(i, j) != color && valueAt(i, j) != Colors.Empty
+                            while (notOutOfRange(i, j) && valueAt(i, j) != color && valueAt(i, j) != Colors.Empty
                                     && valueAt(i, j) != Colors.CanPut) {
                                 i += navi.getKey();
                                 j += navi.getValue();
                             }
-                            if (i >= 0 && j >= 0 && i <= 7 && j <= 7 && valueAt(i, j) == color &&
+                            if (notOutOfRange(i, j) && valueAt(i, j) == color &&
                                     !places.contains(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()))) {
                                 places.add(new Pair<Integer, Integer>(savedI - navi.getKey(), savedJ - navi.getValue()));
                             }

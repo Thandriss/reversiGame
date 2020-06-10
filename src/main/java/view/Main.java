@@ -12,16 +12,14 @@ import java.io.InputStream;
 
 public class Main extends Application {
 
-
     @Override
     public void start(Stage primaryStage) throws Exception{
         InputStream iconStream = getClass().getResourceAsStream("/img/icon.png");
         Image image = new Image(iconStream);
         primaryStage.getIcons().add(image);
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("/startWindow.fxml"));
-        primaryStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startWindow.fxml"));
         Parent root = loader.load();
+        primaryStage.setResizable(false);
         Scene sceneOfGame = new Scene(root, 1280, 800);
         MainContr contr = loader.getController();
         contr.setStage(primaryStage);

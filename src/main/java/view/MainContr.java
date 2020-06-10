@@ -58,7 +58,7 @@ public class MainContr {
         canBePut = board1.whereToStand(color);
         board1.whereToStandPut(canBePut);
         drawBoard();
-        Scene sceneOfGame = new Scene(rootWind, 1100, 788);
+        Scene sceneOfGame = new Scene(rootWind, 1100, 800);
         sceneOfGame.setOnMouseClicked(mouseHandler);
         stage.setScene(sceneOfGame);
     }
